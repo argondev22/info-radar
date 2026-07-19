@@ -57,3 +57,17 @@ python -m src.main             # 本番登録
 - `.env` の `LOOKBACK_DAYS` / `MAX_PER_SOURCE` で流入量を調整
 - ソースの増減は `src/sources.py`
 - 将来 Claude で「関心スコア／要約」を足す場合は収集と登録の間に処理を挟む
+
+## リリース
+
+セマンティックバージョニング（`vX.Y.Z`）で管理する。変更は `CHANGELOG.md` に記録。
+
+```bash
+# 1. CHANGELOG.md の [Unreleased] に変更を書き、版番号セクションへ移す
+# 2. main に反映
+git add -A && git commit -m "chore: release vX.Y.Z" && git push
+
+# 3. タグを打って push すると、release ワークフローが GitHub Release を自動作成
+git tag -a vX.Y.Z -m "vX.Y.Z"
+git push origin vX.Y.Z
+```
