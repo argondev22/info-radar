@@ -15,7 +15,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 
 from . import config
-from .collect import collect_source
+from .collectors import collect_source
 from .models import Item
 from .sources import CATEGORY_ORDER, SOURCES, section_rank
 from .state import load_seen, save_seen

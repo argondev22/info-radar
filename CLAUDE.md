@@ -45,15 +45,18 @@
 
 ### B. RSSが無いサイトを追加（スクレイプ）
 
-1. `src/collect.py` に `_collect_<name>(src)` を追加（`_collect_anthropic_news` が雛形）。
-   BeautifulSoup で title/url/summary/published を抽出し `Item(...)` のリストを返す。
-2. `collect_source()` の分岐に追加：
+1. `src/collectors/<name>.py` を**新規作成**（既存ファイルは触らない。`anthropic_news.py` が雛形）：
    ```python
-   if src.kind == "scrape_<name>":
-       return _collect_<name>(src)
+   from bs4 import BeautifulSoup
+   from ..models import Item
+   from ..sources import Source
+   from . import register
+   from .common import http_get, clean_text, parse_date_text
+   @register("scrape_<name>")
+   def collect_<name>(src): ...  # Item のリストを返す
    ```
-3. `sources.yaml` に `kind: scrape_<name>` でソース追加。
-4. **必ず** `--dry-run` で件数と中身を確認（スクレイパーは壊れやすい。HTML構造は実物を見て書く）。
+2. `sources.yaml` に `kind: scrape_<name>` でソース追加。
+3. **必ず** `--dry-run` で件数と中身を確認（スクレイパーは壊れやすい。HTML構造は実物を見て書く）。
 
 ### C. カテゴリを追加（例：株式）
 
@@ -99,7 +102,8 @@
 ```
 sources.yaml       ★ソース定義（ここを編集: ソース/カテゴリ/並び順）
 src/sources.py     sources.yaml のローダー（CATEGORY_ORDER/SECTION_ORDER導出）
-src/collect.py     収集（RSS / github_changelog / scrape_*）
+src/collectors/    収集プラグイン（1 kind=1ファイル・@registerで自動登録）
+  common.py        共通ヘルパー（http_get / clean_text / parse_date_text）
 src/notion_sink.py Notion登録（NotionTarget: タグ自動解決・ページ組み立て）
 src/main.py        ①収集 →②重複除去 →③登録
 src/config.py      環境変数・NOTE_NEWS_ID
