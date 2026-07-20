@@ -9,6 +9,8 @@
 - **PATCH**: 後方互換のバグ修正・小改善
 
 ## [Unreleased]
+
+## [0.2.1] - 2026-07-20
 ### Changed
 - 定期実行を 07:00 JST → **06:00 JST** に変更（cron `0 21 * * *`）。
 - README / CLAUDE.md の見出し階層を整理（H1 は先頭のみ、以降は H2 以下）。
@@ -39,6 +41,7 @@
 - `--dry-run` / `--seed` の実行モード
 - GitHub Actions による毎朝（07:00 JST）の定期実行
 
-[Unreleased]: https://github.com/argondev22/info-radar/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/argondev22/info-radar/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/argondev22/info-radar/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/argondev22/info-radar/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/argondev22/info-radar/releases/tag/v0.1.0
