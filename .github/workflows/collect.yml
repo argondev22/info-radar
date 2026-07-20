@@ -1,4 +1,4 @@
-name: info-radar
+name: notion-info-radar
 
 on:
   schedule:

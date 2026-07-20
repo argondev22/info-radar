@@ -20,7 +20,7 @@ from .models import Item
 from .sources import CATEGORY_ORDER, SOURCES, section_rank
 from .state import load_seen, save_seen
 
-log = logging.getLogger("info-radar")
+log = logging.getLogger("notion-info-radar")
 
 JST = timezone(timedelta(hours=9))
 

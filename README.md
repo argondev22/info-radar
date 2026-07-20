@@ -1,4 +1,4 @@
-# info-radar
+# notion-info-radar
 
 AWS と Claude の最新情報を自動収集し、Notion に **カテゴリ別・日次ダイジェスト**として登録する仕組み。
 GitHub Actions で毎朝定期実行する（v1 は AI 処理なし・RSS / スクレイプのみ）。

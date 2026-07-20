@@ -1,4 +1,4 @@
-# CLAUDE.md — info-radar 運用ガイド（エージェント向け）
+# CLAUDE.md — notion-info-radar 運用ガイド（エージェント向け）
 
 このリポジトリは AWS / Claude 等の最新情報を毎朝収集し、Notion に**カテゴリ別・日次ダイジェスト**を作る。
 オペレーター（ユーザー）が「このソース追加して」「このカテゴリ追加して」等と言ったら、
@@ -10,7 +10,7 @@
 - 出力: **新着があるカテゴリごとに1ページ/日**。タイトル=日付(JST)、TAG=カテゴリ、NOTE=ニュース、本文=記事のリンク箇条書き
 - 登録先は**ユーザーの本番Notion**（`DB_APPLICATION_PAGES`）。他のDBには絶対に書き込まない。
 - 実行: GitHub Actions 毎朝 06:00 JST（`.github/workflows/collect.yml`、cron `0 21 * * *` UTC）
-- ローカル実行: `cd ~/Source/info-radar && source .venv/bin/activate && python -m src.main`
+- ローカル実行: `cd ~/Source/notion-info-radar && source .venv/bin/activate && python -m src.main`
   （依存が無ければ `pip install -r requirements.txt`）
 
 ## ワークスペース固有の固定値（非秘密・調べ直し不要）

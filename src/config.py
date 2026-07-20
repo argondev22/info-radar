@@ -23,4 +23,4 @@ MAX_PER_SOURCE = int(os.getenv("MAX_PER_SOURCE", "30"))
 # Notion の title / rich_text は 1 ブロックあたり最大 2000 文字
 NOTION_TEXT_LIMIT = 2000
 
-USER_AGENT = "info-radar/0.1 (+https://github.com/argondev22)"
+USER_AGENT = "notion-info-radar/0.1 (+https://github.com/argondev22)"
