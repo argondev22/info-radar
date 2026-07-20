@@ -2,7 +2,7 @@ name: info-radar
 
 on:
   schedule:
-    - cron: "0 22 * * *" # 07:00 JST（前日22:00 UTC）
+    - cron: "0 21 * * *" # 06:00 JST（前日21:00 UTC）
   workflow_dispatch: {}
 
 permissions:

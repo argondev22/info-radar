@@ -9,6 +9,9 @@
 - **PATCH**: 後方互換のバグ修正・小改善
 
 ## [Unreleased]
+### Changed
+- 定期実行を 07:00 JST → **06:00 JST** に変更（cron `0 21 * * *`）。
+- README / CLAUDE.md の見出し階層を整理（H1 は先頭のみ、以降は H2 以下）。
 
 ## [0.2.0] - 2026-07-20
 ### Changed

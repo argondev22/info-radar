@@ -9,7 +9,7 @@
 - パイプライン: 収集(RSS/スクレイプ) → 重複除去(`state/seen.json`) → Notion登録
 - 出力: **新着があるカテゴリごとに1ページ/日**。タイトル=日付(JST)、TAG=カテゴリ、NOTE=ニュース、本文=記事のリンク箇条書き
 - 登録先は**ユーザーの本番Notion**（`DB_APPLICATION_PAGES`）。他のDBには絶対に書き込まない。
-- 実行: GitHub Actions 毎朝 07:00 JST（`.github/workflows/collect.yml`、cron `0 22 * * *` UTC）
+- 実行: GitHub Actions 毎朝 06:00 JST（`.github/workflows/collect.yml`、cron `0 21 * * *` UTC）
 - ローカル実行: `cd ~/Source/info-radar && source .venv/bin/activate && python -m src.main`
   （依存が無ければ `pip install -r requirements.txt`）
 
@@ -28,11 +28,9 @@
 - `search` の `filter.value` は `"data_source"`（`"database"` は不可）
 - データソースのスキーマ取得/クエリは `client.request(path="data_sources/{id}", ...)` / `.../{id}/query`
 
----
+## プレイブック
 
-# プレイブック
-
-## A. RSSソースを追加（最頻・数分）
+### A. RSSソースを追加（最頻・数分）
 
 1. `src/sources.py` の `SOURCES` に1行追加：
    ```python
@@ -41,7 +39,7 @@
 2. 生存確認：`python -m src.main --dry-run` を実行し、そのソースの `collected N from ...` が出るか確認。
 3. OKなら完了。必要なら CHANGELOG 追記＋リリース（→ E）。
 
-## B. RSSが無いサイトを追加（スクレイプ）
+### B. RSSが無いサイトを追加（スクレイプ）
 
 1. `src/collect.py` に `_collect_<name>(src)` を追加（`_collect_anthropic_news` が雛形）。
    BeautifulSoup で title/url/summary/published を抽出し `Item(...)` のリストを返す。
@@ -53,7 +51,7 @@
 3. `sources.py` に `kind="scrape_<name>"` でソース追加。
 4. **必ず** `--dry-run` で件数と中身を確認（スクレイパーは壊れやすい。HTML構造は実物を見て書く）。
 
-## C. カテゴリを追加（例：株式）
+### C. カテゴリを追加（例：株式）
 
 1. `src/sources.py` にそのカテゴリのソースを追加（`category="株式"`）。
    → `CATEGORY_ORDER`・`config.py`・`main.py` は**触らない**（自動導出）。
@@ -71,30 +69,28 @@
      ```
 3. `--dry-run` で「株式」カテゴリが出るか確認。タグは実行時に名前で自動解決される。
 
-## D. 変更を安全にテスト
+### D. 変更を安全にテスト
 
 - 収集だけ確認：`python -m src.main --dry-run`（書き込みなし）
 - 実登録を試すなら、production 経路で数件だけ作り**必ず archive で消す**（`state/seen.json` は触らない）：
   `NotionTarget.create_category_digest(...)` → 検証 → `client.pages.update(page_id, archived=True)`
 - 氾濫が怖い時は `--limit N` / 環境変数 `LOOKBACK_DAYS` / `MAX_PER_SOURCE` で調整。
 
-## E. リリース
+### E. リリース
 
 1. `CHANGELOG.md` の `[Unreleased]` に変更を記載（機能追加なら版セクションへ）
 2. `git add -A && git commit -m "..." && git push`
 3. 機能追加は MINOR を上げる：`git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z`
    → `release.yml` が GitHub Release を自動作成。
 
----
-
-# やってはいけない
+## やってはいけない
 
 - `.env` や `NOTION_TOKEN` をコミット/ログ出力しない（GitHub側は Secrets 登録済み）
 - `DB_APPLICATION_PAGES` 以外のユーザーDBに書き込まない
 - タグIDを手で指定/ハードコードしない（名前で自動解決される）
 - 無確認で大量 backfill を本番投入しない（まず `--dry-run` / `--limit`）
 
-# ファイル地図
+## ファイル地図
 
 ```
 src/sources.py     ソース定義（＋CATEGORY_ORDER自動導出）
