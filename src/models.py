@@ -10,5 +10,6 @@ class Item:
     url: str
     summary: str
     published: Optional[datetime]  # タイムゾーン付き。取れない場合は None
-    category: str                  # "AWS" | "Claude"
+    category: str                  # "AWS" | "Claude" | "IT" …（= Notion の TAG）
     source_name: str               # ログ用（Notionには入れない）
+    section: Optional[str] = None   # ページ内の並びグループ（任意。例: セキュリティ/AI/ツール）

@@ -32,9 +32,13 @@
 
 ### A. RSSソースを追加（最頻・数分）
 
-1. `src/sources.py` の `SOURCES` に1行追加：
-   ```python
-   Source("<key>", "<表示名>", "<カテゴリ>", "rss", "<フィードURL>"),
+1. `sources.yaml` に1エントリ追加（Python不要）：
+   ```yaml
+     - name: "<表示名>"
+       category: "<カテゴリ>"
+       kind: rss
+       url: "<フィードURL>"
+       section: "<任意: ページ内の並びグループ>"
    ```
 2. 生存確認：`python -m src.main --dry-run` を実行し、そのソースの `collected N from ...` が出るか確認。
 3. OKなら完了。必要なら CHANGELOG 追記＋リリース（→ E）。
@@ -48,13 +52,13 @@
    if src.kind == "scrape_<name>":
        return _collect_<name>(src)
    ```
-3. `sources.py` に `kind="scrape_<name>"` でソース追加。
+3. `sources.yaml` に `kind: scrape_<name>` でソース追加。
 4. **必ず** `--dry-run` で件数と中身を確認（スクレイパーは壊れやすい。HTML構造は実物を見て書く）。
 
 ### C. カテゴリを追加（例：株式）
 
-1. `src/sources.py` にそのカテゴリのソースを追加（`category="株式"`）。
-   → `CATEGORY_ORDER`・`config.py`・`main.py` は**触らない**（自動導出）。
+1. `sources.yaml` にそのカテゴリのソースを追加（`category: 株式`）。
+   → コード（sources.py/config.py/main.py）は**触らない**（自動導出）。
 2. 「ニュース」ノート配下に **`株式` タグ**を用意する。どちらか：
    - ユーザーに「Notionでニュース配下に株式タグ作って」と頼む、または
    - APIで作成（低リスク。不要なら archive で消せる）：
@@ -93,7 +97,8 @@
 ## ファイル地図
 
 ```
-src/sources.py     ソース定義（＋CATEGORY_ORDER自動導出）
+sources.yaml       ★ソース定義（ここを編集: ソース/カテゴリ/並び順）
+src/sources.py     sources.yaml のローダー（CATEGORY_ORDER/SECTION_ORDER導出）
 src/collect.py     収集（RSS / github_changelog / scrape_*）
 src/notion_sink.py Notion登録（NotionTarget: タグ自動解決・ページ組み立て）
 src/main.py        ①収集 →②重複除去 →③登録

@@ -1,54 +1,54 @@
-"""収集対象ソースの定義（確定した5本）。"""
+"""ソース定義の読み込み。`sources.yaml`（リポジトリ直下）から Source 一覧を構築する。
+
+ソース/カテゴリ/並び順の追加・変更は **sources.yaml を編集するだけ**でよい。このファイルは触らない。
+"""
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Optional
+
+import yaml
+
+SOURCES_YAML = Path(__file__).resolve().parent.parent / "sources.yaml"
 
 
 @dataclass
 class Source:
-    key: str
     name: str
-    category: str  # "AWS" | "Claude"
-    kind: str      # "rss" | "github_changelog" | "scrape_anthropic_news" | "scrape_claude_relnotes"
+    category: str
+    kind: str
     url: str
+    section: Optional[str] = None  # ページ内の並びグループ（任意）
+    key: str = ""
 
 
-SOURCES = [
-    Source(
-        key="aws_whatsnew",
-        name="AWS What's New",
-        category="AWS",
-        kind="rss",
-        url="https://aws.amazon.com/about-aws/whats-new/recent/feed/",
-    ),
-    Source(
-        key="aws_news_blog",
-        name="AWS News Blog",
-        category="AWS",
-        kind="rss",
-        url="https://aws.amazon.com/blogs/aws/feed/",
-    ),
-    Source(
-        key="claude_code",
-        name="Claude Code CHANGELOG",
-        category="Claude",
-        kind="github_changelog",
-        url="https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md",
-    ),
-    Source(
-        key="anthropic_news",
-        name="Anthropic Newsroom",
-        category="Claude",
-        kind="scrape_anthropic_news",
-        url="https://www.anthropic.com/news",
-    ),
-    Source(
-        key="claude_relnotes",
-        name="Claude Platform release notes",
-        category="Claude",
-        kind="scrape_claude_relnotes",
-        url="https://platform.claude.com/docs/en/release-notes/overview",
-    ),
-]
+def _load_sources() -> list[Source]:
+    data = yaml.safe_load(SOURCES_YAML.read_text(encoding="utf-8")) or {}
+    out: list[Source] = []
+    for i, row in enumerate(data.get("sources", [])):
+        out.append(
+            Source(
+                name=row["name"],
+                category=row["category"],
+                kind=row["kind"],
+                url=row["url"],
+                section=row.get("section"),
+                key=row.get("key", f"src{i}"),
+            )
+        )
+    return out
 
-# ソース定義から自動導出する表示順。
-# 新カテゴリのソースを SOURCES に足せば、ここに自動で含まれる（他ファイルの変更不要）。
+
+SOURCES = _load_sources()
+
+# カテゴリの表示順（sources.yaml の登場順）
 CATEGORY_ORDER = list(dict.fromkeys(s.category for s in SOURCES))
+
+# ページ内の section 並び順（sources.yaml の登場順）
+SECTION_ORDER = list(dict.fromkeys(s.section for s in SOURCES if s.section))
+
+
+def section_rank(section: Optional[str]) -> int:
+    """ページ内の並び順。section 無し(None)は先頭、以降は sources.yaml の登場順。"""
+    if section is None:
+        return -1
+    return SECTION_ORDER.index(section) if section in SECTION_ORDER else len(SECTION_ORDER)

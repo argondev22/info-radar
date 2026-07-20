@@ -63,14 +63,18 @@ def _parse_date_text(text: str) -> Optional[datetime]:
 
 def collect_source(src: Source) -> list[Item]:
     if src.kind == "rss":
-        return _collect_rss(src)
-    if src.kind == "github_changelog":
-        return _collect_github_changelog(src)
-    if src.kind == "scrape_anthropic_news":
-        return _collect_anthropic_news(src)
-    if src.kind == "scrape_claude_relnotes":
-        return _collect_claude_relnotes(src)
-    raise ValueError(f"unknown source kind: {src.kind}")
+        items = _collect_rss(src)
+    elif src.kind == "github_changelog":
+        items = _collect_github_changelog(src)
+    elif src.kind == "scrape_anthropic_news":
+        items = _collect_anthropic_news(src)
+    elif src.kind == "scrape_claude_relnotes":
+        items = _collect_claude_relnotes(src)
+    else:
+        raise ValueError(f"unknown source kind: {src.kind}")
+    for it in items:  # ソースの section を各記事へ引き継ぐ
+        it.section = src.section
+    return items
 
 
 def _collect_rss(src: Source) -> list[Item]:

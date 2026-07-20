@@ -1,0 +1,44 @@
+# 情報ソース定義。
+# ここを編集するだけでソース/カテゴリ/並び順を追加・変更できる（Pythonは触らない）。
+#
+# フィールド:
+#   name     : ログ表示名（必須）
+#   category : カテゴリ（= Notion の TAG 名。必須）
+#   kind     : 取得方式（必須）。rss / github_changelog / scrape_anthropic_news / scrape_claude_relnotes
+#   url      : 取得元URL（必須）
+#   section  : ページ内の並びグループ（任意）。同じ section の記事が固まって上から順に並ぶ
+#   key      : 一意キー（任意）
+#
+# 注意: 新しい取得方式(RSSでないサイトのスクレイパー)を足す時だけは src/collect.py に関数追加が必要。
+#       RSSソースの追加はこのファイルの編集だけで完結する。
+
+sources:
+  - key: aws_whatsnew
+    name: AWS What's New
+    category: AWS
+    kind: rss
+    url: https://aws.amazon.com/about-aws/whats-new/recent/feed/
+
+  - key: aws_news_blog
+    name: AWS News Blog
+    category: AWS
+    kind: rss
+    url: https://aws.amazon.com/blogs/aws/feed/
+
+  - key: claude_code
+    name: Claude Code CHANGELOG
+    category: Claude
+    kind: github_changelog
+    url: https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md
+
+  - key: anthropic_news
+    name: Anthropic Newsroom
+    category: Claude
+    kind: scrape_anthropic_news
+    url: https://www.anthropic.com/news
+
+  - key: claude_relnotes
+    name: Claude Platform release notes
+    category: Claude
+    kind: scrape_claude_relnotes
+    url: https://platform.claude.com/docs/en/release-notes/overview

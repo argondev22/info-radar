@@ -17,7 +17,7 @@ from datetime import datetime, timedelta, timezone
 from . import config
 from .collect import collect_source
 from .models import Item
-from .sources import CATEGORY_ORDER, SOURCES
+from .sources import CATEGORY_ORDER, SOURCES, section_rank
 from .state import load_seen, save_seen
 
 log = logging.getLogger("info-radar")
@@ -54,7 +54,9 @@ def select_candidates(items: list[Item], seen: set[str]) -> list[Item]:
         if i.url in seen or not within_window(i):
             continue
         dedup.setdefault(i.url, i)
-    return sorted(dedup.values(), key=_sort_key, reverse=True)
+    result = sorted(dedup.values(), key=_sort_key, reverse=True)  # 日付降順
+    result.sort(key=lambda i: section_rank(i.section))            # section順（安定ソートで日付順は保持）
+    return result
 
 
 def group_by_category(items: list[Item]) -> dict[str, list[Item]]:

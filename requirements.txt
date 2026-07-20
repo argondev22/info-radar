@@ -3,3 +3,4 @@ requests>=2.31
 beautifulsoup4>=4.12
 notion-client>=2.2
 python-dotenv>=1.0
+PyYAML>=6.0
