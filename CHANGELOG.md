@@ -10,6 +10,10 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-20
+### Changed
+- プロジェクト/リポジトリ名を `info-radar` → `notion-info-radar` に変更（コード内の参照・ローカルフォルダパスも更新）。
+
 ## [0.3.0] - 2026-07-20
 ### Added
 - **IT カテゴリを追加**（🔒 セキュリティ / 🤖 AI / 🛠 ツール の3 section）。海外中心の良質ソース10本。
@@ -50,7 +54,8 @@
 - `--dry-run` / `--seed` の実行モード
 - GitHub Actions による毎朝（07:00 JST）の定期実行
 
-[Unreleased]: https://github.com/argondev22/notion-info-radar/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/argondev22/notion-info-radar/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/argondev22/notion-info-radar/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/argondev22/notion-info-radar/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/argondev22/notion-info-radar/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/argondev22/notion-info-radar/compare/v0.1.0...v0.2.0
